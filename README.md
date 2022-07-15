@@ -17,7 +17,7 @@ Directory structure:
 ```
 python-kerio-webmail-backup
 │   README.md
-│
+│   config.ini
 └───src
 │   │dmain.py
 │   │   ArchiveManager.py
@@ -50,6 +50,8 @@ should work with Python 3.4
 
 ---
 
+--
+
 ## Installation of Software
 
 You can clone this repo and install the dependencies in **requirements_.txt**.That is all that is required for installation.
@@ -81,10 +83,46 @@ Step-by-step:
     pip install -r requirements.txt
     ```
 
-4. Execute Python script
+4. Initialize ```config.ini``` file
+    1. First we create the config file
+
+    ```bash
+    touch config.ini
+    ```
+
+    2. Then we populate (edit) the appropriate headers and fields for the file
+
+        ```bash
+        > [MailserverData]
+        > mailserver = https://yourmailserver.com
+        >
+        > [UserData]
+        > usernames = username1, username2, username3, ...
+        > passwords = password1, password2, password3, ...
+        ```
+
+    for more explanation of config syntax please refer to [config heading](https://github.com/First-Derivative/python-kerio-webmail-backup#config-file-setup)
+
+5. Execute Python script
 
     ```bash
     python3 src/main.py
     ```
 
 ---
+
+## Config File Setup
+
+This software includes a provision for interacting with the script via a config file which means you only have to configure the usernames, passwords, and mailservers once and never again. This is down via a ```config.ini``` file.
+
+This ```config.ini``` should be located in the project directory (not in src). It should follow this structure, populating the variables as appropriate:
+
+>```config.ini```
+>```bash
+>Line 1: [Mailserver Data]
+>Line 2: mailserver = data
+>Line 3: 
+>Line 4: [UserData]
+>Line 5: usernames = data
+>Line 6: passwords = data
+>```
