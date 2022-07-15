@@ -93,15 +93,15 @@ Step-by-step:
     2. Then we populate (edit) the appropriate headers and fields for the file
 
         ```bash
-        > [MailserverData]
-        > mailserver = https://yourmailserver.com
-        >
-        > [UserData]
-        > usernames = username1, username2, username3, ...
-        > passwords = password1, password2, password3, ...
+        [MailserverData]
+        mailserver = https://yourmailserver.com
+        
+        [UserData]
+        usernames = username1, username2, username3, ...
+        passwords = password1, password2, password3, ...
         ```
 
-    for more explanation of config syntax please refer to [config heading](https://github.com/First-Derivative/python-kerio-webmail-backup#config-file-setup)
+    for more explanation of config syntax please refer to [config](https://github.com/First-Derivative/python-kerio-webmail-backup#config-file-setup)
 
 5. Execute Python script
 
@@ -126,3 +126,5 @@ This ```config.ini``` should be located in the project directory (not in src). I
 >Line 5: usernames = data
 >Line 6: passwords = data
 >```
+
+\* **Note**: the text that reads **'Line 1,2,3'** should not be part of the ```config.ini``` file that is just for display purposes.
