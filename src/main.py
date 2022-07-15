@@ -1,5 +1,5 @@
 from ArchiveManager import ArchiveManager, _join
-import time, re
+import time, re, os
 import configparser
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -286,6 +286,10 @@ def process_account(config=None):
 
   mailserver = None
 
+  #Check if config file exists
+  if( not os.path.exists("./{}".format(config)) ):
+    config = None
+
   config_obj = configparser.ConfigParser()
   if(not config == None):
     config_obj.read(config)
@@ -299,7 +303,10 @@ def process_account(config=None):
 
   # Handle no config.ini file
   if(config == None):
-
+    print("=========================")
+    print("config.ini file not found")
+    print("switching to CLI")
+    print("=========================\n")
     mailserver = input("Please input the kerio webmail url: ")
     print("\n")
 
