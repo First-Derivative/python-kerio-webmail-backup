@@ -1,5 +1,6 @@
 from ArchiveManager import ArchiveManager, _join
 import time, re
+import configparser
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -15,6 +16,10 @@ class LoginAuthError(Exception):
 
 # Mail Server Error for erroneous webmail path
 class MailServerError(Exception):
+  pass
+
+# Config Error for erroneous config data
+class ConfigError(Exception):
   pass
 
 # Auxiliary Functions
@@ -225,7 +230,6 @@ def main(username, password, mailserver, driver):
     print("======================================")
     print("Authneticating: {}".format(username))
     print("======================================")
-    print("\n")
 
     exception = login(username, password, driver)
     if(type(exception) == LoginAuthError):
@@ -272,7 +276,7 @@ def __get_password():
   user_input = input("Please enter password: ")
   return user_input
 
-def process_account():
+def process_account(config=None):
   driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
   print("\n")
   print("======================================")
@@ -280,38 +284,76 @@ def process_account():
   print("======================================")
   print("\n")
 
-  mailserver = input("Please input the kerio webmail url: ")
-  print("\n")
+  mailserver = None
+
+  config_obj = configparser.ConfigParser()
+  if(not config == None):
+    config_obj.read(config)
+    print("===================")
+    print("Got config.ini file")
+    print("===================")
 
   # Manage inputs from user for user credentials
   input_creds = []
   _done = False
-  while ( not _done ):
 
-    user = { 'username': '', 'password': ''}
+  # Handle no config.ini file
+  if(config == None):
+
+    mailserver = input("Please input the kerio webmail url: ")
+    print("\n")
+
+    while ( not _done ):
+
+      user = { 'username': '', 'password': ''}
+      
+      if( len(input_creds) == 0 ):
+        user["username"] = __get_username()
+        user["password"] = __get_password()
+        input_creds.append(user)
+      else:
+      
+        _answered = False
+        while( not _answered ):
+      
+          answer = input("Would you like to process another kerio account?\n").lower()
+          if( answer == 'yes'):
+            _answered = True
+            user["username"] = __get_username()
+            user["password"] = __get_password()
+            input_creds.append(user)
+          elif( answer == 'no' ):
+            _answered = True
+            _done = True
+          else:
+            print("\n***********************")
+            print("Please enter yes or no")
+            print("***********************\n")
+  # Handle config ini file
+  else:
+    # Extract mailserver form config file
+    mailparams = config_obj["MailserverData"]
+    mailserver = mailparams["mailserver"].strip()
     
-    if( len(input_creds) == 0 ):
-      user["username"] = __get_username()
-      user["password"] = __get_password()
+    userparams = config_obj["UserData"]
+    
+    # Extract usernames from config file
+    username_src = userparams["usernames"].strip()
+    usernames = username_src.split(",")
+
+    # Extract passwords from config file
+    password_src = userparams["passwords"].strip()
+    passwords = password_src.split(",")
+
+    if( len(usernames) != len(passwords) ):
+      raise ConfigError("No. of usernames don't match No. of passwords")
+
+    for i in range( len(usernames) ):
+      user = {
+        "username": usernames[i].strip(),
+        "password": passwords[i].strip(),
+      }
       input_creds.append(user)
-    else:
-    
-      _answered = False
-      while( not _answered ):
-    
-        answer = input("Would you like to process another kerio account?\n").lower()
-        if( answer == 'yes'):
-          _answered = True
-          user["username"] = __get_username()
-          user["password"] = __get_password()
-          input_creds.append(user)
-        elif( answer == 'no' ):
-          _answered = True
-          _done = True
-        else:
-          print("\n***********************")
-          print("Please enter yes or no")
-          print("***********************\n")
 
   for user in input_creds:
     try:
@@ -320,4 +362,4 @@ def process_account():
       pass
 
 if __name__ == "__main__":
-  process_account()
+  process_account("./config.ini")
