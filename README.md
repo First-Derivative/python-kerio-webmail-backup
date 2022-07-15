@@ -64,7 +64,7 @@ Step-by-step:
     git clone https://github.com/First-Derivative/python-kerio-webmail-backup.git
     ```
 
-2. Activate environment \[Optional\]
+2. Activate environment **\[Optional\]**
     * Using Conda/MiniConda:
 
       ```bash
@@ -83,7 +83,7 @@ Step-by-step:
     pip install -r requirements.txt
     ```
 
-4. Initialize ```config.ini``` file
+4. Initialize ```config.ini``` file **\[Optional\]**
     1. First we create the config file
 
     ```bash
