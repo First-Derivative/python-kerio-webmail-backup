@@ -316,13 +316,13 @@ def process_account(config=None):
         _answered = False
         while( not _answered ):
       
-          answer = input("Would you like to process another kerio account?\n").lower()
-          if( answer == 'yes'):
+          answer = input("Would you like to process another kerio account? (Y/N) \n").lower()
+          if( answer == 'yes' or answer == 'y'):
             _answered = True
             user["username"] = __get_username()
             user["password"] = __get_password()
             input_creds.append(user)
-          elif( answer == 'no' ):
+          elif( answer == 'no' or answer == 'n'):
             _answered = True
             _done = True
           else:
